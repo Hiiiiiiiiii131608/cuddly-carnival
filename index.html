@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Roku ECP - Safe 3-Integer Reader</title>
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <main>
+    <h1>Roku ECP — Safe 3-Integer Reader</h1>
+
+    <p>
+      Enter the Roku device IP (local network) and input containing integers. The app parses up to 3 valid signed 32-bit integers, skips invalid tokens, and can send them to the Roku as literal keypresses (ECP <code>/keypress/Lit_x</code>), as well as perform other ECP commands (query device, query apps, launch app, send remote keypress).
+    </p>
+
+    <label for="rokuIp">Roku IP (e.g. 192.168.1.100)</label>
+    <input id="rokuIp" placeholder="Enter Roku IP (no port), e.g. 192.168.1.100" />
+
+    <label for="input">Input (paste or type multiple lines):</label>
+    <textarea id="input" placeholder="e.g. 1 2 3&#10;or&#10;1, two, 3"></textarea>
+
+    <div class="controls">
+      <button id="parseBtn">Parse</button>
+      <button id="sendParsedBtn">Send parsed integers as characters</button>
+      <button id="sendParsedWithSubmitBtn">Send parsed ints + Select</button>
+      <button id="clearBtn">Clear</button>
+    </div>
+
+    <section class="card small">
+      <h3>Direct ECP commands</h3>
+      <div class="row">
+        <input id="appId" placeholder="App ID to launch (e.g. 12)" />
+        <button id="launchBtn">Launch App</button>
+      </div>
+      <div class="row">
+        <select id="remoteKey">
+          <option>Home</option>
+          <option>Rev</option>
+          <option>Fwd</option>
+          <option>Play</option>
+          <option>Select</option>
+          <option>Left</option>
+          <option>Right</option>
+          <option>Up</option>
+          <option>Down</option>
+          <option>Back</option>
+          <option>VolumeUp</option>
+          <option>VolumeDown</option>
+          <option>PowerOff</option>
+        </select>
+        <button id="sendKeyBtn">Send Key</button>
+      </div>
+      <div class="row">
+        <input id="litChar" placeholder="Single literal char to send (e.g. a)" maxlength="1" />
+        <button id="sendLitBtn">Send Lit_ char</button>
+      </div>
+      <div class="row">
+        <button id="queryDeviceBtn">Query Device Info</button>
+        <button id="queryAppsBtn">Query Apps</button>
+        <button id="queryActiveAppBtn">Query Active App</button>
+      </div>
+    </section>
+
+    <section id="result" class="card">
+      <h2>Result / Logs</h2>
+      <div id="summary">No input yet.</div>
+      <div id="warnings"></div>
+      <pre id="log" class="logarea"></pre>
+    </section>
+
+    <section class="examples">
+      <h3>Notes</h3>
+      <ul>
+        <li>ECP endpoints run on port 8060: e.g. <code>http://&lt;roku-ip&gt;:8060/keypress/Home</code> or <code>/keypress/Lit_a</code>.</li>
+        <li>Browser cross-origin restrictions (CORS) may block direct fetches to a device that doesn't allow cross-origin requests. If you see CORS errors in the log, use a local proxy/server or an environment that allows such requests.</li>
+        <li>Discovery (SSDP) uses UDP and cannot be performed reliably from a plain browser page — enter the Roku IP manually.</li>
+      </ul>
+    </section>
+
+    <footer>
+      <small>Implements Roku External Control Protocol (ECP) endpoints: POST /keypress/&lt;key&gt; (Lit_ syntax supported), POST /launch/&lt;appid&gt;, and GET /query/* endpoints.</small>
+    </footer>
+  </main>
+</body>
+</html>
